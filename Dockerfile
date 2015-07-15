@@ -7,31 +7,35 @@
 FROM debian:jessie
 MAINTAINER Matt Jadud <matt@jadud.com>
 
+# Create a temporary directory
+RUN mkdir /build
+
 RUN dpkg --add-architecture i386
+
+# Add mosquitto
+ADD pkgs/mosquitto/mosquitto-repo.gpg.key /build/mosquitto-repo.gpg.key
+ADD pkgs/mosquitto/mosquitto-jessie.list /etc/apt/sources.list.d/mosquitto-jessie.list
+RUN apt-key add /build/mosquitto-repo.gpg.key
+
 RUN apt-get update
 RUN apt-get install -y \
   build-essential \
   supervisor \
-  g++ \
   curl \
-  libssl-dev \
   git \
   python \
   racket \
   vim \
-  libc-ares-dev \
-  uuid-dev \
+  mosquitto \
   libc6:i386 \
   libncurses5:i386 \
   libstdc++6:i386
 
-# apache2-utils \
-# libxml2-dev \
-
+# Load in my build script
+ADD build.sh /build/build.sh
+RUN /bin/bash /build/build.sh
 
 ADD occam/ /usr/local/kroc-avr/
-ADD build.sh /build.sh
-RUN sudo /bin/bash /build.sh
 
 # Add supervisord conf
 ADD conf/cloud9.conf /etc/supervisor/conf.d/
@@ -46,6 +50,9 @@ VOLUME /workspace
 
 # Directories we want on the machine
 RUN mkdir /compiled
+
+# Cleanup the build directory
+RUN rm -rf /build
 
 # ------------------------------------------------------------------------------
 # Expose ports.

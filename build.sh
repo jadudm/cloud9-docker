@@ -3,15 +3,15 @@
 # ------------------------------------------------------------------------------
 
 # Build mosquitto
-mkdir /mosquitto
-pushd /mosquitto
-  curl -sL -o mosquitto-1.4.2.tgz http://mosquitto.org/files/source/mosquitto-1.4.2.tar.gz
-  tar xvzf mosquitto-1.4.2.tgz
-  pushd mosquitto-1.4.2
-    make
-    make install
-  popd
-popd
+#mkdir /mosquitto
+#pushd /mosquitto
+#  curl -sL -o mosquitto-1.4.2.tgz http://mosquitto.org/files/source/mosquitto-1.4.2.tar.gz
+#  tar xvzf mosquitto-1.4.2.tgz
+#  pushd mosquitto-1.4.2
+#    make
+#    make install
+#  popd
+#popd
 
 
 curl -sL https://deb.nodesource.com/setup | bash -
