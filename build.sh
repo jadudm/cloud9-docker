@@ -24,7 +24,3 @@ popd
 
 # Tweak standlone.js conf
 sed -i -e 's_127.0.0.1_0.0.0.0_g' /cloud9/configs/standalone.js
-
-# Append to .bashrc
-# Configure the occam tools.
-echo "source /usr/local/kroc-avr/bin/avr-kroc-setup.sh" >> /root/.bashrc

@@ -1,0 +1,113 @@
+// an almost complete javascript grammar in simple JSON format
+{
+        
+    // prefix ID for regular expressions used in the grammar
+    "RegExpID" : "RegExp::",
+    
+    //
+    // Style model
+    "Style" : {
+        // lang token type  -> Editor (style) tag
+        "comment":    "comment",
+        "atom":       "constant",
+        "keyword":    "keyword",
+        "this":       "keyword",
+        "builtin":    "support",
+        "operator":   "operator",
+        "identifier": "identifier",
+        "property":   "constant.support",
+        "number":     "constant.numeric",
+        "string":     "string",
+        "regex":      "string.regexp"
+    },
+
+    
+    //
+    // Lexical model
+    "Lex" : {
+        
+        // comments
+        "comment" : {
+            "type" : "comment",
+            "tokens" : [
+                // line comment
+                // start, end delims  (null matches end-of-line)
+                [  "--",  null ]
+            ]
+        },
+        
+        // general identifiers
+        "identifier" : "RegExp::/[_A-Za-z$][_A-Za-z0-9$]*/",
+        
+        "property" : "RegExp::/[_A-Za-z$][_A-Za-z0-9$]*/",
+        
+        // numbers, in order of matching
+        "number" : [
+            // floats
+            "RegExp::/\\d*\\.\\d+(e[\\+\\-]?\\d+)?/",
+            "RegExp::/\\d+\\.\\d*/",
+            "RegExp::/\\.\\d+/",
+            // integers
+            // hex
+            "RegExp::/0x[0-9a-fA-F]+L?/",
+            // binary
+            "RegExp::/0b[01]+L?/",
+            // octal
+            "RegExp::/0o[0-7]+L?/",
+            // decimal
+            "RegExp::/[1-9]\\d*(e[\\+\\-]?\\d+)?L?/",
+            // just zero
+            "RegExp::/0(?![\\dx])/"
+        ],
+        
+        // operators
+        "operator" : {
+            "combine" : true,
+            "tokens" : [
+                "\\", "+", "-", "*", "/", "%", "BITAND", "BITOR", "^", "~", "<", ">" , "!",
+                "OR", "AND", "==", "!=", "<=", ">=", "<>", ">>", "<<"
+            ]
+        },
+        
+        // delimiters
+        "delimiter" : {
+            "combine" : true,
+            "tokens" : [
+                "(", ")", "[", "]", "{", "}", ","
+            ]
+        },
+            
+        // atoms
+        "atom" : {
+            // enable autocompletion for these tokens, with their associated token ID
+            "autocomplete" : true,
+            "tokens" : [
+                "TRUE", "FALSE"
+            ]
+        },
+
+        // keywords
+        "keyword" : {
+            // enable autocompletion for these tokens, with their associated token ID
+            "autocomplete" : true,
+            "tokens" : [ 
+                "IF", "WHILE", 
+                "PAR", "SEQ", "ALT", "PROC", "SKIP", "STOP"
+            ]
+        }
+        
+    },
+    
+
+    // what to parse and in what order
+    "Parser" : [
+        "comment",
+        "number",
+        "string",
+        "regex",
+        "keyword",
+        "operator",
+        "atom",
+    ]
+}
+
