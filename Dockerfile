@@ -37,11 +37,7 @@ RUN /bin/bash /build/build.sh
 
 ADD occam/ /usr/local/kroc-avr/
 
-# Add supervisord conf
-ADD conf/cloud9.conf /etc/supervisor/conf.d/
-ADD conf/simplehttp.conf /etc/supervisor/conf.d/
-ADD conf/mosquitto.conf /etc/supervisor/conf.d/
-ADD conf/etc-mosquitto.conf /etc/mosquitto/mosq.conf
+ADD /pkgs/mongoose /usr/bin/mongoose
 
 # ------------------------------------------------------------------------------
 # Add volumes
@@ -51,20 +47,41 @@ VOLUME /workspace
 # Directories we want on the machine
 RUN mkdir /compiled
 
+# Install the compilation server
+RUN raco pkg install yaml bitsyntax
+ADD plumb-install.sh /build/plumb-install.sh
+RUN /bin/bash /build/plumb-install.sh
+
 # Cleanup the build directory
 RUN rm -rf /build
+
+# Add supervisord conf
+ADD conf/cloud9.conf /etc/supervisor/conf.d/
+ADD conf/mosquitto.conf /etc/supervisor/conf.d/
+ADD conf/mongoose.conf /etc/supervisor/conf.d/
+ADD conf/plumb-server.conf /etc/supervisor/conf.d/
+ADD conf/etc-mosquitto.conf /etc/mosquitto/mosq.conf
+
+# Fix supervisor
+RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
+RUN update-rc.d supervisor defaults
 
 # ------------------------------------------------------------------------------
 # Expose ports.
 # For the IDE
 EXPOSE 80
 # For downloading compiled outputs
-EXPOSE 81
+EXPOSE 10101
 # For the IDE... as well?
 EXPOSE 3000
 # For mosquitto
 EXPOSE 8338
+# For Plumbing
+EXPOSE 9000
 
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
+# Run With
+# docker run -p 80:80 -p 3000:3000 -p 10101:10101 -p 8338:8338 -p 9000:9000 --rm --name plumbing^Cadudm/occam
