@@ -50,7 +50,10 @@ VOLUME /workspace
 RUN mkdir /compiled
 
 # Install the compilation server
+ADD pkgs/plumb /plumb
 ADD plumb-install.sh /build/plumb-install.sh
+ADD plumb /usr/local/bin/plumb
+ADD pkgs/examples /workspace/examples
 RUN /bin/bash /build/plumb-install.sh
 
 # Cleanup the build directory
@@ -79,10 +82,6 @@ EXPOSE 3000
 EXPOSE 8338
 # For Plumbing
 EXPOSE 9000
-
-
-RUN groupadd -r plumb && useradd -r -g plumb plumb
-USER plumb
 
 # ------------------------------------------------------------------------------
 # Start supervisor, define default command.

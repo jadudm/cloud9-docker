@@ -1,0 +1,16 @@
+#!/bin/bash
+HEADS=${@:1:$(($# - 1))}
+TAIL=${@:$#}
+
+# echo ${HEADS}
+# echo ${TAIL}
+
+pushd /plumb > /dev/null
+racket plumb.rkt \
+  ${HEADS} \
+  --config /plumb/client-config/docker.yaml \
+  --mqtt-host localhost \
+  --mqtt-port 8338 \
+  --mqtt-channel plumbing \
+  ${TAIL}
+popd
