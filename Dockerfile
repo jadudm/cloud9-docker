@@ -91,3 +91,5 @@ CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
 # docker build -t jadudm/plumbing .
 # Run With
 # docker run -p 80:80 -p 3000:3000 -p 10101:10101 -p 8338:8338 -p 9000:9000 --rm --name plumbing jadudm/plumbing
+
+# docker rm plumbing ; make && docker run -v /workspace:/home/cnc/git/dockerfiles/occam-plumb/workspace -p 80:80 -p 3000:3000 -p 10101:10101 -p 8338:8338 -p 9000:9000 --rm --name plumbing jadudm/plumbing
